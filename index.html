@@ -3,174 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <title>Q2 les 4 Aangifte</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root {
-            --politie-blauw: #1a3a5a;
-            --politie-goud: #fbc02d;
-            --licht-blauw: #e3f2fd;
-            --wit: #ffffff;
-            --grijs: #f4f7f9;
-        }
-
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; padding: 0; background-color: var(--grijs);
-            height: 100vh; display: flex; flex-direction: column;
-        }
-
-        header { 
-            background: var(--politie-blauw); 
-            color: #b0bec5; 
-            padding: 4px 15px; 
-            border-bottom: 2px solid var(--politie-goud);
-            flex-shrink: 0;
-        }
+        :root { --blauw: #1a3a5a; --goud: #fbc02d; --wit: #ffffff; --grijs: #f4f7f9; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--grijs); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        header h1 { font-size: 11px; margin: 0; font-weight: 400; letter-spacing: 0.5px; }
+        header { background: var(--blauw); color: #b0bec5; padding: 6px 15px; border-bottom: 2px solid var(--goud); flex-shrink: 0; }
+        header h1 { font-size: 11px; margin: 0; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; }
 
-        .instruction-bar {
-            background: #ffffff; border-bottom: 1px solid #ccc;
-            padding: 12px 15px; font-size: 13px; color: #333; line-height: 1.5;
-        }
+        .instructie-bar { background: var(--wit); padding: 12px 20px; border-bottom: 1px solid #ccc; font-size: 13px; color: #333; flex-shrink: 0; }
+        .instructie-bar strong { color: var(--blauw); }
 
-        .main-layout { display: grid; grid-template-columns: 480px 1fr 400px; flex-grow: 1; overflow: hidden; }
+        .container { display: grid; grid-template-columns: 480px 1fr 400px; flex-grow: 1; overflow: hidden; }
 
-        /* LINKER KOLOM: SCENARIO OPBOUW */
-        .stap-kolom { background: var(--licht-blauw); border-right: 2px solid #ccc; display: flex; flex-direction: column; overflow-y: auto; }
-        .stap-sectie { padding: 15px; border-bottom: 1px solid #bbdefb; }
-        .stap-titel { font-weight: bold; font-size: 13px; color: var(--politie-blauw); margin-bottom: 8px; display: block; text-transform: uppercase; }
+        /* LINKER KOLOM: DE STAPPEN */
+        .scenario-kolom { background: #eef4f9; border-right: 2px solid #ccd1d9; overflow-y: auto; display: flex; flex-direction: column; }
+        .stap-box { padding: 18px; border-bottom: 1px solid #d1d9e0; }
+        .stap-label { font-weight: bold; font-size: 12px; color: var(--blauw); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .info-tekst { font-size: 13px; color: #444; line-height: 1.5; margin-bottom: 10px; }
         
-        .scenario-tekst { font-size: 12.5px; color: #333; line-height: 1.4; margin-bottom: 10px; }
-        .ovj-box { background: #ffe0b2; border: 1px solid #fb8c00; padding: 10px; font-size: 12px; margin-top: 10px; border-radius: 4px; }
+        .ovj-alert { background: #fff3e0; border: 1px solid #ffe0b2; padding: 10px; border-radius: 4px; font-size: 12px; color: #e65100; font-weight: 600; margin-top: 10px; }
         
-        audio { width: 100%; margin-top: 5px; height: 30px; }
+        audio { width: 100%; height: 35px; margin-top: 5px; }
 
-        #chatWindow { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: rgba(255,255,255,0.7); min-height: 200px; }
-        .bubble { padding: 8px 12px; border-radius: 8px; font-size: 13.5px; max-width: 90%; line-height: 1.4; }
-        .bot { background: var(--wit); align-self: flex-start; border: 1px solid var(--politie-blauw); }
-        .user { background: var(--politie-blauw); color: var(--wit); align-self: flex-end; }
-        
-        .chat-input-area { padding: 10px; background: var(--wit); display: flex; gap: 5px; border-top: 1px solid #ccc; }
-        
-        /* MIDDEN & RECHTS */
-        .werk-kolom { padding: 20px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; background: var(--wit); }
-        textarea { width: 100%; height: 420px; padding: 15px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 14px; resize: none; box-sizing: border-box; }
-        .btn-inleveren { background: var(--politie-blauw); color: var(--wit); padding: 15px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        /* CHATBOX IN STAP 4 */
+        .chat-sectie { flex-grow: 1; display: flex; flex-direction: column; background: #ffffff; margin-top: auto; border-top: 2px solid var(--goud); }
+        #chatWindow { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #fdfdfd; max-height: 300px; }
+        .bubble { padding: 10px 14px; border-radius: 12px; font-size: 13.5px; max-width: 85%; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .bot { background: #f0f0f0; align-self: flex-start; border: 1px solid #ddd; border-bottom-left-radius: 2px; }
+        .user { background: var(--blauw); color: var(--wit); align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-input { padding: 12px; display: flex; gap: 8px; border-top: 1px solid #eee; }
+        .chat-input input { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 
-        .feedback-kolom { padding: 20px; background: #eceff1; border-left: 2px solid #ccc; overflow-y: auto; }
-        .submission-card { background: var(--wit); padding: 15px; border-radius: 6px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid var(--politie-goud); }
-        .submitted-text { white-space: pre-wrap; font-size: 13.5px; color: #333; margin-bottom: 12px; line-height: 1.5; }
-        .feedback-input { width: 100%; height: 70px; background: #fffde7; border: 1px solid var(--politie-goud); padding: 8px; font-size: 12px; box-sizing: border-box; }
+        /* MIDDEN: HET PV */
+        .werk-kolom { padding: 25px; display: flex; flex-direction: column; background: var(--wit); border-right: 1px solid #ddd; }
+        textarea { flex-grow: 1; width: 100%; padding: 20px; border: 1px solid #ccd1d9; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.6; resize: none; box-sizing: border-box; outline: none; }
+        textarea:focus { border-color: var(--blauw); }
+        .btn-submit { background: var(--blauw); color: white; padding: 16px; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 4px; transition: 0.2s; }
+        .btn-submit:hover { background: #24466b; }
 
-        #qrcode { margin: 10px auto; text-align: center; }
+        /* RECHTS: DASHBOARD */
+        .feedback-kolom { padding: 20px; background: #f4f7f9; overflow-y: auto; }
+        .stap-titel-rechts { font-weight: bold; font-size: 14px; color: var(--blauw); border-bottom: 2px solid #ddd; padding-bottom: 8px; margin-bottom: 20px; display: block; }
+        .feedback-card { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--goud); margin-bottom: 20px; }
+        .pv-weergave { white-space: pre-wrap; font-size: 13px; color: #333; margin-bottom: 15px; line-height: 1.5; background: #fafafa; padding: 10px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Q2 les 4 Aangifte</h1>
-</header>
+<header><h1>Q2 les 4 Aangifte</h1></header>
 
-<div class="instruction-bar">
-    <strong>Leerdoelen:</strong> Je kunt een aangiftegesprek voeren en een proces-verbaal schrijven waarin ook aandacht is voor slachtofferzorg en juridische afhandeling.
+<div class="instructie-bar">
+    <strong>Leerdoelen:</strong> 1. Je kunt een proces-verbaal van aangifte schrijven in correct Nederlands. 2. Je kunt een aangiftegesprek voeren in correct Nederlands.
 </div>
 
-<div class="main-layout">
-    <aside class="stap-kolom">
-        <div class="stap-sectie">
-            <span class="stap-titel">Stap 1 & 2: Melding & Ter Plaatse</span>
-            <div class="scenario-tekst">Analyseer de melding en de situatie ter plaatse (auto/deur vernield, moker aangetroffen).</div>
-            <audio controls><source src="Getuigenverhoor.m4a" type="audio/mp4"></audio>
+<div class="container">
+    <aside class="scenario-kolom">
+        <div class="stap-box">
+            <span class="stap-label">Stap 1: De Situatie</span>
+            <div class="info-tekst">Luister naar de initiële melding van de meldkamer:</div>
+            <audio controls><source src="melding vernieling auto.m4a" type="audio/mpeg"></audio>
         </div>
 
-        <div class="stap-sectie">
-            <span class="stap-titel">Stap 3: De Afhandeling</span>
-            <div class="scenario-tekst">
-                De aangever Freek wordt gehoord. Hij herkent Mario op het filmpje van de getuige (dierenwinkel).
+        <div class="stap-box">
+            <span class="stap-label">Stap 2: Ter Plaatse</span>
+            <div class="info-tekst">
+                Auto met deuken en kapotte ramen. Moker op straat. Voordeur beschadigd. Buurman is Poolse getuige (spreekt geen NL).
+                <br><strong>Informatie van het OC:</strong>
             </div>
-            <div class="ovj-box">
-                <strong>Besluit Officier van Justitie:</strong><br>
-                Voldoende grond voor <strong>aanhouding buiten heterdaad (ABH)</strong> van Mario ter zake vernieling.
+            <audio controls><source src="nadere informatie casus vernieling.m4a" type="audio/mpeg"></audio>
+            <div class="info-tekst" style="margin-top:10px;"><strong>Verhoor medewerkster dierenwinkel:</strong></div>
+            <audio controls><source src="Getuigenverhoor.m4a" type="audio/mpeg"></audio>
+        </div>
+
+        <div class="stap-box">
+            <span class="stap-label">Stap 3: Juridische Afhandeling</span>
+            <div class="info-tekst">Aangever Freek herkent Mario op de beelden van de dierenwinkel.</div>
+            <div class="ovj-alert">
+                Besluit OvJ: Er is voldoende grond voor de aanhouding buiten heterdaad (ABH) van Mario.
             </div>
         </div>
 
-        <div class="stap-sectie" style="flex-grow: 1; display: flex; flex-direction: column; border-bottom: none;">
-            <span class="stap-titel">Stap 4: Verhoor & Zorg (Freek)</span>
+        <div class="chat-sectie">
+            <span class="stap-label" style="padding:15px 15px 0 15px;">Stap 4: Aangiftegesprek Freek</span>
             <div id="chatWindow">
-                <div class="bubble bot"><strong>Freek:</strong> "Ik ben echt doodsbang dat Mario terugkomt nu hij weet dat ik aangifte doe. Kunt u me helpen met bescherming?"</div>
+                <div class="bubble bot"><strong>Freek:</strong> "Agent, ik durf bijna niet meer te slapen. Die moker tegen mijn deur... ik ben doodsbang voor Mario. Kunt u iets voor mij betekenen?"</div>
             </div>
-            <div class="chat-input-area">
-                <input type="text" id="userInput" style="flex-grow:1; padding:8px;" placeholder="Praat met Freek...">
-                <button onclick="askBot()" style="background:var(--politie-goud); border:none; padding:8px 12px; cursor:pointer; font-weight:bold;">STUUR</button>
+            <div class="chat-input">
+                <input type="text" id="chatIn" placeholder="Stel je vragen over de feiten en zorg...">
+                <button onclick="sendChat()" style="background:var(--goud); border:none; padding:8px 15px; cursor:pointer; font-weight:bold; border-radius:4px;">STUUR</button>
             </div>
         </div>
     </aside>
 
     <main class="werk-kolom">
-        <h3 style="margin:0; font-size: 14px; color: var(--politie-blauw);">STAP 5: VOLLEDIG PROCES-VERBAAL</h3>
-        <textarea id="pvInput" placeholder="Verwerk de persoonsgegevens van Freek, de feiten, de herkenning van Mario en de verzoeken om hulp in het PV..."></textarea>
-        <button class="btn-inleveren" onclick="submitPV()">Inleveren</button>
-        <div id="qrcode"></div>
-        <p style="text-align:center; font-size: 9px; color: #999; margin: 0;">SCAN VOOR MOBIEL VERHOOR</p>
+        <span class="stap-label">Stap 5: Proces-verbaal uitwerken</span>
+        <textarea id="pvVeld" placeholder="Schrijf hier het proces-verbaal. Gebruik witregels voor een heldere structuur. Let op de persoonsgegevens en de juridische grondslag voor de ABH..."></textarea>
+        <button class="btn-submit" onclick="inleveren()">INLEVEREN VOOR FEEDBACK</button>
     </main>
 
     <aside class="feedback-kolom">
-        <h3 style="margin-top:0; font-size: 14px;">REVIEW & FEEDBACK</h3>
+        <span class="stap-titel-rechts">DASHBOARD DOCENT</span>
         <div id="feedbackLijst">
-            <p id="emptyMsg" style="font-size: 12px; color: #888;">Wacht op uitwerking...</p>
+            <div style="font-size: 13px; color: #888; text-align: center; margin-top: 50px;">Wacht op uitwerkingen van studenten...</div>
         </div>
     </aside>
 </div>
 
 <script>
-    // Persoonsgegevens Freek (automatisch gegenereerd voor consistentie)
-    const freekData = {
-        naam: "Freek Jansen",
-        geboren: "14-05-1985 te Utrecht",
-        adres: "Kerkstraat 12A, 3511 BS Utrecht",
-        beroep: "Grafisch vormgever"
+    const freekPersoonsgegevens = { 
+        naam: "Freek van den Broek", 
+        geb: "12-08-1992 te Amersfoort", 
+        adres: "Lindelaan 45, 3707 BJ Zeist",
+        tel: "06-12345678"
     };
 
-    function askBot() {
-        const input = document.getElementById('userInput');
+    function sendChat() {
+        const input = document.getElementById('chatIn');
         const win = document.getElementById('chatWindow');
-        if (!input.value.trim()) return;
+        if(!input.value.trim()) return;
 
         win.innerHTML += `<div class="bubble user">${input.value}</div>`;
         const v = input.value.toLowerCase();
-        let r = "Ik weet het niet, ik wil gewoon dat dit stopt.";
+        let r = "Sorry agent, ik ben er met mijn hoofd niet helemaal bij. Wat bedoelt u precies?";
 
-        if (v.includes("naam") || v.includes("wie bent u")) r = `Mijn volledige naam is ${freekData.naam}. Ik ben geboren op ${freekData.geboren}.`;
-        if (v.includes("adres") || v.includes("woont")) r = `Ik woon op de ${freekData.adres}.`;
-        if (v.includes("mario")) r = "Ja, ik herkende hem direct op dat filmpje. We hebben al langer een conflict over de erfscheiding.";
-        if (v.includes("hulp") || v.includes("bescherming")) r = "Ik wil graag Slachtofferhulp en ik hoop dat jullie vaker langsrijden. Ik durf bijna niet te slapen.";
-        if (v.includes("angst") || v.includes("bang")) r = "Mario is onvoorspelbaar. Die moker tegen mijn deur was een duidelijke boodschap.";
+        if(v.includes("naam") || v.includes("wie bent u")) r = `Mijn naam is ${freekPersoonsgegevens.naam}, geboren op ${freekPersoonsgegevens.geb}.`;
+        if(v.includes("adres") || v.includes("woont")) r = `Ik woon op de ${freekPersoonsgegevens.adres}.`;
+        if(v.includes("mario")) r = "Mario is een ex-collega. We hebben ruzie over een schuld. Ik wist niet dat hij tot dit in staat was.";
+        if(v.includes("hulp") || v.includes("slachtoffer")) r = "Ik wil heel graag Slachtofferhulp. En kunnen jullie vaker langsrijden vannacht?";
+        if(v.includes("angst") || v.includes("bang")) r = "Ik voel me niet meer veilig in mijn eigen huis. Die beschadigde deur herinnert me er steeds aan.";
 
         setTimeout(() => {
-            win.innerHTML += `<div class="bubble bot"><strong>Freek:</strong> "${r}"</div>`;
+            win.innerHTML += `<div class="bubble bot"><strong>Freek:</strong> ${r}</div>`;
             win.scrollTop = win.scrollHeight;
-        }, 500);
+        }, 600);
         input.value = "";
     }
 
-    function submitPV() {
-        const tekst = document.getElementById('pvInput').value;
+    function inleveren() {
+        const tekst = document.getElementById('pvVeld').value;
         const lijst = document.getElementById('feedbackLijst');
-        const emptyMsg = document.getElementById('emptyMsg');
-        if (!tekst.trim()) return;
-        if (emptyMsg) emptyMsg.remove();
+        if(!tekst.trim()) { alert("Veld is leeg!"); return; }
+
+        if(lijst.innerText.includes("Wacht op")) lijst.innerHTML = "";
 
         const card = document.createElement('div');
-        card.className = 'submission-card';
-        card.innerHTML = `<div class="submitted-text">${tekst}</div><textarea class="feedback-input" placeholder="Feedback op PV en Slachtofferzorg..."></textarea>`;
+        card.className = 'feedback-card';
+        card.innerHTML = `
+            <div style="font-size: 11px; font-weight: bold; color: var(--blauw); margin-bottom: 8px;">INGELEVERD PV:</div>
+            <div class="pv-weergave">${tekst}</div>
+            <textarea style="width:100%; height:80px; padding:10px; border: 1px solid var(--goud); font-size: 12px;" placeholder="Typ hier de docentfeedback..."></textarea>
+        `;
         lijst.prepend(card);
-        document.getElementById('pvInput').value = "";
+        document.getElementById('pvVeld').value = "";
     }
 
-    new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 80, height: 80 });
-    document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') askBot(); });
+    document.getElementById('chatIn').addEventListener('keypress', (e) => { if(e.key==='Enter') sendChat(); });
 </script>
-
 </body>
 </html>
